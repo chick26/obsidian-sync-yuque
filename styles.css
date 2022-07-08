@@ -1,4 +1,5 @@
 /* Sets all the text color to red! */
-body {
-    color: red;
+.obsidian-lark-upload-list .dropdown{
+  width: 220px;
+  /* border-radius: 0; */
 }
