@@ -1,5 +1,11 @@
 /* Sets all the text color to red! */
 .obsidian-lark-upload-list .dropdown{
-  width: 220px;
-  /* border-radius: 0; */
+  /* width: 220px; */
+}
+
+.obsidian-lark-upload-list {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center
 }

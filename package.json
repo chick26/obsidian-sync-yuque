@@ -13,6 +13,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
+		"@types/yaml-front-matter": "^4.1.0",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
@@ -24,10 +25,8 @@
 	"dependencies": {
 		"@types/js-yaml": "^4.0.5",
 		"@types/node-fetch": "^2.6.2",
-		"@types/nunjucks": "^3.2.1",
-		"@types/yaml-front-matter": "^4.1.0",
+		"js-base64": "^3.7.2",
 		"js-yaml": "^4.1.0",
-		"nunjucks": "^3.2.3",
 		"yaml-front-matter": "^4.1.1"
 	}
 }

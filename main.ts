@@ -1,19 +1,28 @@
 // import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import { DEFAULT_SETTINGS, QuerySettings } from 'setting';
-import { LarkClient } from 'src';
-
+import { DEFAULT_SETTINGS, QuerySettings, UploadSettings } from 'setting';
+import { LarkClient, Document, DocumentConfig } from 'src';
 
 class UploadModal extends Modal {
 	client: LarkClient;
-	result: string;
+	fileName: string;
 	setting: QuerySettings;
-	onSubmit: (result: string) => void;
+	uploadingSettings: UploadSettings = {
+		slug: '',
+		title: '',
+		namespace: '',
+		token: '',
+		user: {},
+	};
+	onSubmit(text: string) {
+		console.log('result', text);
+	}
 
 	constructor(app: App, setting: QuerySettings, onSubmit: (result: string) => void) {
 		super(app);
 		this.onSubmit = onSubmit;
 		this.setting = setting;
+		this.uploadingSettings.namespace = setting.user.login;
 		this.client = new LarkClient(setting.token, setting.user);
 	}
 
@@ -26,16 +35,9 @@ class UploadModal extends Modal {
 			.setName("Name")
 			.addText((text) =>
 				text.onChange((value) => {
-					this.result = value
+					this.fileName = value
+					this.uploadingSettings.title = value;
 				}));
-
-		new Setting(contentEl)
-			.setName("Current List")
-			.addToggle((toggle) =>
-				toggle.onChange((value) => {
-					// this.result = value
-				}
-				));
 
 		new Setting(contentEl)
 			.setName("New List")
@@ -44,11 +46,16 @@ class UploadModal extends Modal {
 				try {
 					const res = await this.client.getRepos()
 					if(res.status === 200) {
+						const options:Record<string, string> = {}
+						res.data.data.map((item: any, index: number) => {
+							options[item.slug] = item.name;
+							if(index == 0) this.uploadingSettings.slug = item.slug;
+						})
 						dropdown
-							.addOptions(res.data.data.map((item: any) => {
-								return item.name
-							})
-							)
+							.addOptions(options)
+							.onChange(async (value) =>	{
+								this.uploadingSettings.slug = value;
+							});
 					} else {
 						new Notice('!Error' + res.data);
 					}
@@ -62,15 +69,39 @@ class UploadModal extends Modal {
 				btn
 					.setButtonText("Submit")
 					.setCta()
-					.onClick(() => {
-						this.close();
-						this.onSubmit(this.result);
+					.onClick( async () => {
+						const noteFile = this.app.workspace.getActiveFile();
+						if(!noteFile) return; 
+						const text = await this.app.vault.read(noteFile);
+						const doc = new Document(this.client, text, this.fileName);
+						this.onUploadFile(doc.dump());
 					}));
 	}
 
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();
+	}
+
+	async onUploadFile(file: DocumentConfig) {
+		const namespace = this.uploadingSettings.namespace + '/' + this.uploadingSettings.slug;
+		const uploadParams = {
+			title: this.uploadingSettings.title || file.title,
+			slug: file.slug,
+			format: 'markdown',
+			file: file.originFile,
+		}
+		try {
+			const res = await this.client.uploadFile(namespace, uploadParams)
+			if(res.status === 200) {
+				console.log('upload success', res.data);
+				this.close();
+				new Notice('Upload Success');
+			}
+		} catch (e) {
+			console.log('upload error', e);
+		}
+
 	}
 }
 

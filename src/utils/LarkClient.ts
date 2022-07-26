@@ -73,4 +73,10 @@ export default class LarkClient {
     const res = await this.client.get('/user');
     return res;
   }
+
+  async uploadFile(namespace: string, data: any) {
+    const requestUrl = `/repos/${namespace}/docs?title=${data.title}&slug=${data.slug}&format=${data.format}`;
+    const res = await this.client.post(requestUrl, data.file);
+    return res;
+  }
 }

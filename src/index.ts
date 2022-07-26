@@ -1,7 +1,7 @@
 import LarkClient from './utils/LarkClient';
-import Document from './utils/Document';
+import Document, { DocumentConfig} from './utils/Document';
 import User from './utils/User';
 
 export { LarkClient, Document };  
-export type { User };
+export type { User, DocumentConfig };
 

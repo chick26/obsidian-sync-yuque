@@ -30,15 +30,27 @@ export default class NodeHttp {
     }
   }
 
-  // async post(url: string, data: any) {
-  //     const res = await fetch(url, {
-  //         method: 'POST',
-  //         headers: {
-  //             'X-Auth-Token': this.token,
-  //             'Access-Control-Allow-Origin': "*",
-  //         },
-  //         body: JSON.stringify(data),
-  //     });
-  //     return res.json();
-  // }
+  async post(url: string, data: any) {
+    try {
+      const res = await requestUrl(
+        {
+          url: [this.config.baseURL, url].join(''), 
+          headers: this.config.headers,
+          method: 'POST',
+          body: JSON.stringify({
+            body: data
+          }),
+          contentType: 'application/json'
+        })
+      return {
+        data: res.json,
+        status: res.status
+      }
+    } catch (error) {
+      return {
+        status: 500,
+        data: error,
+      }
+    }
+  }
 }
