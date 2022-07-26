@@ -23,3 +23,4 @@
 ## 📖 Referfence
 
 - [Doc-文档·语雀](https://www.yuque.com/yuque/developer/doc)
+- [Obsidian Plugin Developer Docs](https://marcus.se.net/obsidian-plugin-docs/)
