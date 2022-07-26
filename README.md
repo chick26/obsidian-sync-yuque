@@ -7,3 +7,7 @@
 - Setup Your `Token` In the Plugin
 - Login to Obtain Your Account Info.
 - ❤️ Enjoy the Plugin
+
+## 📖 Referfence
+
+- [Doc-文档·语雀](https://www.yuque.com/yuque/developer/doc)
