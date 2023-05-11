@@ -46,7 +46,7 @@ class UploadModal extends Modal {
 				try {
 					const res = await this.client.getRepos()
 					if(res.status === 200) {
-						const options:Record<string, string> = {}
+						const options:Record<string, string> = {}						
 						res.data.data.map((item: any, index: number) => {
 							options[item.slug] = item.name;
 							if(index == 0) this.uploadingSettings.slug = item.slug;
@@ -71,7 +71,10 @@ class UploadModal extends Modal {
 					.setCta()
 					.onClick( async () => {
 						const noteFile = this.app.workspace.getActiveFile();
-						if(!noteFile) return; 
+						if(!noteFile){
+							new Notice('No active file')
+							return
+						}
 						const text = await this.app.vault.read(noteFile);
 						const doc = new Document(this.client, text, this.fileName);
 						this.onUploadFile(doc.dump());
@@ -93,10 +96,12 @@ class UploadModal extends Modal {
 		}
 		try {
 			const res = await this.client.uploadFile(namespace, uploadParams)
+
 			if(res.status === 200) {
-				console.log('upload success', res.data);
 				this.close();
 				new Notice('Upload Success');
+			} else {
+				new Error('Upload Error' + res)
 			}
 		} catch (e) {
 			console.log('upload error', e);
@@ -139,10 +144,11 @@ class GeneralSettingsTab extends PluginSettingTab {
 					.onClick(async () => {
 						this.client = new LarkClient(this.plugin.settings.token);
 						this.client.getUser().then(async(res) => {
+							
 							if(res.status === 200) {
 								this.plugin.settings.user = res.data.data;
 								await this.plugin.saveSettings();
-								new Notice('Login Success');	
+								new Notice('Login Success My dear ' + res.data.data?.name);	
 							} else {
 								new Notice('!Error' + res.data);
 							}

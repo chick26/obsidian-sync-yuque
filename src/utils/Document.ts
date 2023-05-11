@@ -62,7 +62,7 @@ export default class Document {
   loadConfig() {
     this.slug = Base64.encode(this.title + '.md')
       .toLowerCase()
-      .replace(/\s/g, '-');
+      .replace(/[^a-zA-Z0-9\\.\\-]/g, "");
   }
 
   dump() {
