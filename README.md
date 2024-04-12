@@ -6,8 +6,6 @@
 > [!NOTE]
 > 本库暂时不再更新了,因为已经弃用语雀,有兴趣的可以参考一下(iCloud同步就完事了!)
 ---
-
----
 ## ✂️ How to Use
 
 - 🖍 Obtain Your `Token` From [yueque.com](https://www.yuque.com/settings/tokens/new?language=en-us)
